@@ -7,6 +7,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
+
 public class GDrawingPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -17,10 +18,10 @@ public class GDrawingPanel extends JPanel {
 		this.addMouseListener(mouseEventHandler);
 		this.addMouseMotionListener(mouseEventHandler);
 	}
-	
+
 	public void paint(Graphics g) {
 	}
-	
+
 	public void draw(int x ,int y) {
 		Graphics graphics = this.getGraphics();
 		graphics.drawRect(x, y, 20, 30);
@@ -56,7 +57,7 @@ public class GDrawingPanel extends JPanel {
 		public void mouseMoved(MouseEvent e) {
 		//	System.out.println(this.getClass().getEnclosingMethod());
 		}
-		
+
 		@Override
 		public void mouseEntered(MouseEvent e) {
 		//	System.out.println(this.getClass().getEnclosingMethod());
@@ -66,7 +67,9 @@ public class GDrawingPanel extends JPanel {
 		public void mouseExited(MouseEvent e) {
 		//	System.out.println(this.getClass().getEnclosingMethod());
 		}
+
+	}
 		
 	}
 	
-}
+
