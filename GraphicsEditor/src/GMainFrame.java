@@ -1,9 +1,10 @@
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JRadioButton;
 
 public class GMainFrame extends JFrame {
 
@@ -29,15 +30,26 @@ public class GMainFrame extends JFrame {
 		
 		this.drawingPanel = new GDrawingPanel();
 		this.add(drawingPanel, BorderLayout.CENTER);
-		
 
-		this.shapeToolBar = new GShapeToolBar(drawingPanel);
+		ShapeActionHandler shapeActionHandler = new ShapeActionHandler();
+		this.shapeToolBar = new GShapeToolBar(shapeActionHandler);
 		this.add(shapeToolBar,BorderLayout.NORTH);
 		
 	
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
-				
+			
+		}
+		
+	public class ShapeActionHandler implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+			drawingPanel.setShapeText(((JRadioButton)e.getSource()).getText());
+			
+		}	
 		
 	}
 	

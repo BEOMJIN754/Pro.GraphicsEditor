@@ -12,19 +12,38 @@ public class GDrawingPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	public enum EShapeButtons {
+		eRactangle,
+		eOval,
+		eLine, 
+		ePolygon
+	}
+	private String shapeText;
+	
 	public GDrawingPanel() {
 		this.setBackground(Color.gray);
 		MouseEventHandler mouseEventHandler = new MouseEventHandler();
 		this.addMouseListener(mouseEventHandler);
 		this.addMouseMotionListener(mouseEventHandler);
 	}
+	public void setShapeText(String shapeText) {
+		this.shapeText = shapeText;
+		System.out.println(shapeText);
+	}
 
 	public void paint(Graphics g) {
 	}
 
 	public void draw(int x ,int y) {
+		if(this.shapeText.equals("rectangle")) {
 		Graphics graphics = this.getGraphics();
 		graphics.drawRect(x, y, 20, 30);
+		}else if(this.shapeText.equals("oval")) {
+			Graphics graphics = this.getGraphics();
+			graphics.drawOval(x, y, 20, 30);
+		}else if(this.shapeText.equals("polygon")) {
+			Graphics graphics = this.getGraphics();
+		}
 	}
 	private class MouseEventHandler implements MouseListener, MouseMotionListener{
 
@@ -69,6 +88,7 @@ public class GDrawingPanel extends JPanel {
 		}
 
 	}
+	
 		
 	}
 	

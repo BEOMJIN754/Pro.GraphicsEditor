@@ -17,8 +17,9 @@ public class GShapeToolBar extends JToolBar {
 	private GDrawingPanel drawingPanel;
 
 
-	public GShapeToolBar(GDrawingPanel drawingPanel) {
-	this.drawingPanel = drawingPanel;
+
+	public GShapeToolBar(GMainFrame.ShapeActionHandler shapeActionHandler) {
+	
 
 	ButtonGroup buttonGroup = new ButtonGroup();
 
