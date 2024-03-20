@@ -1,15 +1,17 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+package frames;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
+
+import global.Constants.EShapeButtons;
 
 public class GShapeToolBar extends JToolBar {
 
 	
 	private static final long serialVersionUID = 1L;
 
+	
+	
 	private JRadioButton rectangleButton;
 	private JRadioButton ovalButton;
 	private JRadioButton lineButton;
@@ -21,23 +23,17 @@ public class GShapeToolBar extends JToolBar {
 	public GShapeToolBar(GMainFrame.ShapeActionHandler shapeActionHandler) {
 	
 
+		// add ActionHandler
 	ButtonGroup buttonGroup = new ButtonGroup();
-
-	this.rectangleButton = new JRadioButton("rectangle");
-	this.add(rectangleButton);
-	buttonGroup.add(rectangleButton);
-
-	this.ovalButton = new JRadioButton("oval");
-	this.add(ovalButton);
-	buttonGroup.add(ovalButton);
-
-	this.lineButton = new JRadioButton("line");
-	this.add(lineButton);
-	buttonGroup.add(lineButton);
-
-	this.polygonButton = new JRadioButton("polygon");
-	this.add(polygonButton);
-	buttonGroup.add(polygonButton);
-
+	
+	for(EShapeButtons eShapeButtons : EShapeButtons.values()) {
+		JRadioButton button = new JRadioButton(eShapeButtons.getText()); //eRac 바꿔야해!!
+	
+		button.addActionListener(shapeActionHandler);
+		button.setActionCommand(eShapeButtons.toString());
+		this.add(button);
+		buttonGroup.add(button);
 	}
+	
+}
 }

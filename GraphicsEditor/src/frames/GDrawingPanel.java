@@ -1,5 +1,5 @@
+package frames;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -7,17 +7,14 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
+import shapetools.GShapeTool;
+
 
 public class GDrawingPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public enum EShapeButtons {
-		eRactangle,
-		eOval,
-		eLine, 
-		ePolygon
-	}
+	private GShapeTool ShapeTool; 
 	private String shapeText;
 	
 	public GDrawingPanel() {
@@ -25,6 +22,12 @@ public class GDrawingPanel extends JPanel {
 		MouseEventHandler mouseEventHandler = new MouseEventHandler();
 		this.addMouseListener(mouseEventHandler);
 		this.addMouseMotionListener(mouseEventHandler);
+	}
+	
+	public void setShapeTool(GShapeTool shapeTool) {
+		// TODO Auto-generated method stub
+		this.ShapeTool = shapeTool;
+		
 	}
 	public void setShapeText(String shapeText) {
 		this.shapeText = shapeText;
@@ -35,15 +38,7 @@ public class GDrawingPanel extends JPanel {
 	}
 
 	public void draw(int x ,int y) {
-		if(this.shapeText.equals("rectangle")) {
-		Graphics graphics = this.getGraphics();
-		graphics.drawRect(x, y, 20, 30);
-		}else if(this.shapeText.equals("oval")) {
-			Graphics graphics = this.getGraphics();
-			graphics.drawOval(x, y, 20, 30);
-		}else if(this.shapeText.equals("polygon")) {
-			Graphics graphics = this.getGraphics();
-		}
+		this.ShapeTool.draw(x, y, 20, 20, getGraphics());
 	}
 	private class MouseEventHandler implements MouseListener, MouseMotionListener{
 
@@ -88,6 +83,7 @@ public class GDrawingPanel extends JPanel {
 		}
 
 	}
+	
 	
 		
 	}
