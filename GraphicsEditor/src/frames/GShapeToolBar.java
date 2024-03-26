@@ -34,6 +34,6 @@ public class GShapeToolBar extends JToolBar {
 		this.add(button);
 		buttonGroup.add(button);
 	}
-	
+
 }
 }
