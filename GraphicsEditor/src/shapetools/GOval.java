@@ -10,14 +10,22 @@ private Graphics graphics;
 	public GOval() {
 		
 	}
-	
-	
+	public GOval clone() {
+		return new GOval();
+	}
 	@Override
-	public void draw(Graphics graphics) {
+	public void drag(Graphics graphics) {
 		Graphics2D graphics2D = (Graphics2D) graphics;
 		graphics2D.setXORMode(graphics2D.getBackground());
 		//erase old shape 
-		graphics.drawOval(x1, y1, ox2-x1, oy2-y1);
+		graphics2D.drawOval(x1, y1, ox2-x1, oy2-y1);
+		
+		//draw new shape 
+		graphics2D.drawOval(x1, y1, x2-x1, y2-y1);
+		
+	}
+	@Override
+	public void draw(Graphics graphics) {
 		//draw new shape 
 		graphics.drawOval(x1, y1, x2-x1, y2-y1);
 	}

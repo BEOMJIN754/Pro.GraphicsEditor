@@ -1,16 +1,17 @@
 package shapetools;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-public class GRectangle extends GShape {
+public  class GLine extends GShape {
 
-	private Graphics graphics;
+private Graphics graphics;
 	
-	public GRectangle() {
+	public GLine() {
 		
 	}
-	public GRectangle clone() {
-		return new GRectangle();
+	public GLine clone() {
+		return new GLine();
 	}
 	
 	
@@ -19,14 +20,15 @@ public class GRectangle extends GShape {
 		Graphics2D graphics2D = (Graphics2D) graphics;
 		graphics2D.setXORMode(graphics2D.getBackground());
 		//erase old shape 
-		graphics2D.drawRect(x1, y1, ox2-x1, oy2-y1);
+		graphics2D.drawLine(x1, y1, ox2, oy2);
+		
 		//draw new shape 
-		graphics2D.drawRect(x1, y1, x2-x1, y2-y1);
+		graphics2D.drawLine(x1, y1, x2, y2);
+		
 	}
 	@Override
 	public void draw(Graphics graphics) {
-		//draw new shape 
-		graphics.drawRect(x1, y1, x2-x1, y2-y1);
-		
+		// TODO Auto-generated method stub
+		graphics.drawLine(x1, y1, ox2, oy2);
 	}
 }
