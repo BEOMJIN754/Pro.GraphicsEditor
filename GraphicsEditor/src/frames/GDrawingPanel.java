@@ -48,13 +48,24 @@ public class GDrawingPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("mouseClicked");
-			
+			if(!bDrawing) {
+				currentShape = shapeTool.clone();
+				currentShape.setP1(e.getX(), e.getY());
+				bDrawing = true;
+			}else{
+				shapes.add(currentShape); 
+				bDrawing = false;
+			}
+					
+
 		}
 		
 		@Override
 		public void mouseMoved(MouseEvent e) {
-		
+			if(bDrawing) {
+				currentShape.setP2(e.getX(), e.getY());
+				currentShape.drag(getGraphics());
+				}
 		}
 
 		@Override
@@ -80,7 +91,6 @@ public class GDrawingPanel extends JPanel {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			System.out.println("mouseDragged");
 			if(bDrawing) {
 				currentShape.setP2(e.getX(), e.getY());
 				currentShape.drag(getGraphics());
