@@ -10,12 +10,17 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import shapetools.GShape;
+import shapetools.GShape.EDrawingStyle;
 
 public class GDrawingPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private boolean bDrawing;
+	private enum EDrawingState {
+		eIdle, e2PState, eNPState
+	}
+
+	private EDrawingState eDrawingState;
 	private Vector<GShape> shapes;
 	private GShape shapeTool;
 	private GShape currentShape;
@@ -25,8 +30,8 @@ public class GDrawingPanel extends JPanel {
 		MouseEventHandler mouseEventHandler = new MouseEventHandler();
 		this.addMouseListener(mouseEventHandler);
 		this.addMouseMotionListener(mouseEventHandler);
-		
-		this.bDrawing = false;
+
+		this.eDrawingState = EDrawingState.eIdle;
 
 		this.shapes = new Vector<GShape>();
 	}
@@ -44,68 +49,68 @@ public class GDrawingPanel extends JPanel {
 		}
 	}
 
+	private void startDrawing(int x, int y) {
+		currentShape = shapeTool.clone();
+		currentShape.setP1(x, y);
+	}
+
+	private void keepDrawing(int x, int y) {
+		currentShape.setP2(x, y);
+		currentShape.drag(getGraphics());
+	}
+
+	private void stopDrawing(int x, int y) {
+
+	}
+
 	private class MouseEventHandler implements MouseListener, MouseMotionListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(!bDrawing) {
-				currentShape = shapeTool.clone();
-				currentShape.setP1(e.getX(), e.getY());
-				bDrawing = true;
-			}else{
-				shapes.add(currentShape); 
-				bDrawing = false;
-			}
-					
 
 		}
-		
+
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			if(bDrawing) {
-				currentShape.setP2(e.getX(), e.getY());
-				currentShape.drag(getGraphics());
-				}
+
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
 			System.out.println("mousePressed");
-			if(!bDrawing) {
-				currentShape = shapeTool.clone();
-				currentShape.setP1(e.getX(), e.getY());
-				bDrawing = true;
+			if (eDrawingState == EDrawingState.e2PState) {
+				if (shapeTool.getEDrawingStyle() == EDrawingStyle.e2PStyle) {
+					startDrawing(e.getX(), ABORT);
+				}
+				eDrawingState = EDrawingState.e2PState;
 			}
-					}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			System.out.println("mouseReleased");
-			
-			if(bDrawing) {
-				shapes.add(currentShape); 
-				bDrawing = false;
-			}
-
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			if(bDrawing) {
-				currentShape.setP2(e.getX(), e.getY());
-				currentShape.drag(getGraphics());
-				}
-			
+			if (eDrawingState == EDrawingState.e2PState) {
+				keepDrawing(e.getX(), e.getY());
+			}
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			System.out.println("mouseReleased");
+
+			if (eDrawingState == EDrawingState.e2PState) {
+				stopDrawing(e.getX(), e.getY());
+				eDrawingState = EDrawingState.eIdle;
+			}
+
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			System.out.println("mouseEntered");
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			System.out.println("mouseExited");
 		}
 
 	}

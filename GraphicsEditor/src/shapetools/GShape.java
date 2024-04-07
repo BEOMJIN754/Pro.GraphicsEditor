@@ -2,10 +2,19 @@ package shapetools;
 import java.awt.Graphics;
 
 public abstract class GShape {
+	public enum EDrawingStyle{
+		e2PStyle,
+		eNPStyle
+	}
+	private EDrawingStyle eDrawingStyle;
 	
 	protected int x1, y1, x2, y2, ox2, oy2;
+	public EDrawingStyle getEDrawingStyle() {
+		return this.eDrawingStyle;
+	}
 	
-	public GShape() {
+	public GShape( EDrawingStyle eDrawingStyle) {
+		this.eDrawingStyle = eDrawingStyle;
 		this.x1 = 0;
 		this.y1 = 0;
 		this.x2 = 0;

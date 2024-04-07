@@ -8,6 +8,7 @@ public  class GLine extends GShape {
 private Graphics graphics;
 	
 	public GLine() {
+		super(EDrawingStyle.e2PStyle);
 		
 	}
 	public GLine clone() {

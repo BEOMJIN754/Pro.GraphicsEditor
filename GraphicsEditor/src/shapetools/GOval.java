@@ -3,12 +3,14 @@ package shapetools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import shapetools.GShape.EDrawingStyle;
+
 public  class GOval extends GShape {
 
 private Graphics graphics;
 	
 	public GOval() {
-		
+		super(EDrawingStyle.e2PStyle);
 	}
 	public GOval clone() {
 		return new GOval();
