@@ -13,9 +13,9 @@ public class GMainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	//component
 	private GMenuBar menuBar;
 	private GShapeToolBar shapeToolBar;
-
 	private GDrawingPanel drawingPanel; 
 	
 	public GMainFrame() {
@@ -31,18 +31,29 @@ public class GMainFrame extends JFrame {
 		this.menuBar = new GMenuBar();
 		this.setJMenuBar(this.menuBar);
 		
-		this.drawingPanel = new GDrawingPanel();
-		this.add(drawingPanel, BorderLayout.CENTER);
 
 		ShapeActionHandler shapeActionHandler = new ShapeActionHandler();
 		this.shapeToolBar = new GShapeToolBar(shapeActionHandler);
 		this.add(shapeToolBar,BorderLayout.NORTH);
 		
+		this.drawingPanel = new GDrawingPanel();
+		this.add(drawingPanel, BorderLayout.CENTER);
 	
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
 			
 		}
+	//method
+	public void initialize() {
+		// 메뉴바 쉐입툴 바,드로잉 패널을 자식으로 가지고 있음 
+		this.shapeToolBar.initialize();
+		this.menuBar.initialize();
+		this.drawingPanel.initialize();
+		
+		
+		
+	}
+	
 		
 	public class ShapeActionHandler implements ActionListener{
 
@@ -55,6 +66,6 @@ public class GMainFrame extends JFrame {
 		}	
 		
 	}
-	
+
 	
 }
