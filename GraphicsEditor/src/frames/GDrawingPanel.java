@@ -21,7 +21,7 @@ import shapetools.GShape;
 import shapetools.GShape.EDrawingStyle;
 
 public class GDrawingPanel extends JPanel {
-	//attributes
+	// attributes
 	private static final long serialVersionUID = 1L;
 
 	private enum EDrawingState {
@@ -29,13 +29,13 @@ public class GDrawingPanel extends JPanel {
 	}
 
 	private EDrawingState eDrawingState;
-	
-	//component 부품
+
+	// component 부품
 	private Vector<GShape> shapes;
 	private GShape shapeTool;
 	private GShape currentShape;
-	
-	//constructors
+
+	// constructors
 	public GDrawingPanel() {
 		this.setBackground(Color.gray);
 		MouseEventHandler mouseEventHandler = new MouseEventHandler();
@@ -46,46 +46,29 @@ public class GDrawingPanel extends JPanel {
 
 		this.shapes = new Vector<GShape>();
 	}
+
 	public void initialize() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	//setters and getters 
+	// setters and getters
 	public void setShapeTool(GShape shapeTool) {
 		// TODO Auto-generated method stub
 		this.shapeTool = shapeTool;
 
 	}
 
-	
-	//methods
-	public void open() {
-	    try {
-	    	File file = new File("output");
-	        ObjectInputStream objectInputStream = new ObjectInputStream(
-	                new BufferedInputStream(new FileInputStream(file))); // 이미 생성한 File 객체 사용
-	        this.shapes = (Vector<GShape>) objectInputStream.readObject();
-	        this.repaint(); // 화면 갱신
-	        objectInputStream.close(); 
-	    } catch (IOException | ClassNotFoundException e) {
-	        e.printStackTrace(); 
-	    }
+	public Vector<GShape> getShapes() {
+		return this.shapes;
 	}
-	public void save() {
-	    try {
-	    	File file = new File("output");
-	        ObjectOutputStream objectOutputStream = new ObjectOutputStream(
-	                new BufferedOutputStream(
-	                		new FileOutputStream(file)));
-	        objectOutputStream.writeObject(this.shapes);
-	        objectOutputStream.close(); 
-	    } catch (IOException e) {
-	        e.printStackTrace(); 
-	    }
+
+	public void setShapes(Object object) {
+		this.shapes = (Vector<GShape>)object;
 	}
-		
-	
+
+	// methods
+
 	public void paint(Graphics graphics) {
 		for (GShape shape : shapes) {
 			shape.draw(graphics);
@@ -105,6 +88,7 @@ public class GDrawingPanel extends JPanel {
 	private void continueDrawing(int x, int y) {
 		currentShape.addPoint(x, y);
 	}
+
 	private void stopDrawing(int x, int y) {
 		currentShape.addPoint(x, y);
 		shapes.add(currentShape);
@@ -114,25 +98,23 @@ public class GDrawingPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if(e.getClickCount()==1) {
-			if (eDrawingState == EDrawingState.eIdle) {
-				if (shapeTool.getEDrawingStyle() == EDrawingStyle.eNPStyle) {
-					startDrawing(e.getX(), e.getY());
+			if (e.getClickCount() == 1) {
+				if (eDrawingState == EDrawingState.eIdle) {
+					if (shapeTool.getEDrawingStyle() == EDrawingStyle.eNPStyle) {
+						startDrawing(e.getX(), e.getY());
+						eDrawingState = EDrawingState.eNPState;
+					}
+				} else if (eDrawingState == EDrawingState.eNPState) {
+					continueDrawing(e.getX(), e.getY());
 					eDrawingState = EDrawingState.eNPState;
 				}
-			}else if (eDrawingState == EDrawingState.eNPState) {
-				continueDrawing(e.getX(), e.getY());
-				eDrawingState = EDrawingState.eNPState;
-			}
-		}else if(e.getClickCount()==2) {
-			if (eDrawingState == EDrawingState.eNPState) {
-				stopDrawing(e.getX(), e.getY());
-				eDrawingState = EDrawingState.eIdle;
+			} else if (e.getClickCount() == 2) {
+				if (eDrawingState == EDrawingState.eNPState) {
+					stopDrawing(e.getX(), e.getY());
+					eDrawingState = EDrawingState.eIdle;
+				}
 			}
 		}
-		}
-
-	
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
@@ -179,7 +161,5 @@ public class GDrawingPanel extends JPanel {
 		}
 
 	}
-
-	
 
 }
