@@ -1,10 +1,11 @@
 package shapetools;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 
 import shapetools.GShape.EDrawingStyle;
 
-public class GRectangle extends GShape {
+public class GRectangle extends GShape  {
 
 	private Graphics graphics;
 	

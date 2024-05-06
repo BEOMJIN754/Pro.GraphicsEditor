@@ -2,8 +2,9 @@ package shapetools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 
-public  class GLine extends GShape {
+public  class GLine extends GShape  {
 
 private Graphics graphics;
 	

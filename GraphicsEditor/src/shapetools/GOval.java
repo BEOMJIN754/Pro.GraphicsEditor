@@ -2,10 +2,11 @@ package shapetools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 
 import shapetools.GShape.EDrawingStyle;
 
-public  class GOval extends GShape {
+public  class GOval extends GShape  {
 
 private Graphics graphics;
 	

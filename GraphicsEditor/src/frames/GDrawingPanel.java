@@ -5,6 +5,14 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -50,10 +58,33 @@ public class GDrawingPanel extends JPanel {
 
 	}
 
+	
 	//methods
-	void save() {
-		
+	public void open() {
+	    try {
+	    	File file = new File("output");
+	        ObjectInputStream objectInputStream = new ObjectInputStream(
+	                new BufferedInputStream(new FileInputStream(file))); // 이미 생성한 File 객체 사용
+	        this.shapes = (Vector<GShape>) objectInputStream.readObject();
+	        this.repaint(); // 화면 갱신
+	        objectInputStream.close(); 
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace(); 
+	    }
 	}
+	public void save() {
+	    try {
+	    	File file = new File("output");
+	        ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+	                new BufferedOutputStream(
+	                		new FileOutputStream(file)));
+	        objectOutputStream.writeObject(this.shapes);
+	        objectOutputStream.close(); 
+	    } catch (IOException e) {
+	        e.printStackTrace(); 
+	    }
+	}
+		
 	
 	public void paint(Graphics graphics) {
 		for (GShape shape : shapes) {

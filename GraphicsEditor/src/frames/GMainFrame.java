@@ -40,8 +40,8 @@ public class GMainFrame extends JFrame {
 		this.add(drawingPanel, BorderLayout.CENTER);
 	
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
-		
-			
+		//associate 
+		this.menuBar.associate(this.drawingPanel);
 		}
 	//method
 	public void initialize() {
