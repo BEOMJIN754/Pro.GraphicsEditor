@@ -22,14 +22,12 @@ public class GMainFrame extends JFrame {
 	
 	public GMainFrame() {
 		this.setSize(400, 600);
-		
+		this.setLocationRelativeTo(null);
 		LayoutManager layoutManager = new BorderLayout();
 		this.setLayout(layoutManager);
 		
 		this.menuBar = new GMenuBar();
 		this.setJMenuBar(this.menuBar);
-		
-
 		
 		this.shapeToolBar = new GShapeToolBar();
 		this.add(shapeToolBar,BorderLayout.NORTH);

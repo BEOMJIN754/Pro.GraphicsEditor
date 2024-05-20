@@ -2,6 +2,7 @@ package shapetools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.io.Serializable;
 
 import global.Constants;
@@ -12,9 +13,8 @@ public class GPolygon extends GShape {
 	private int yPoints[];
 	private int nPoints;
 	
-	
 	public GPolygon() {
-		super(EDrawingStyle.eNPStyle);
+		super(EDrawingStyle.eNPStyle, new Polygon());
 		this.xPoints = new int[Constants.NUM_POINTS];
 		this.yPoints = new int[Constants.NUM_POINTS];
 		this.nPoints =0;
@@ -31,7 +31,7 @@ public class GPolygon extends GShape {
 		//erase old shape 
 		graphics.drawPolyline(xPoints, yPoints, nPoints);
 		//draw new shape 
-	//	graphics.drawPolyline(xPoints, yPoints, nPoints);
+		graphics.drawPolyline(xPoints, yPoints, nPoints);
 
 	}
 	@Override
@@ -46,10 +46,9 @@ public class GPolygon extends GShape {
 		this.yPoints[nPoints] = y;
 		
 		this.nPoints++;
+		
 		this.xPoints[nPoints] = x;
 		this.yPoints[nPoints] = y;
-		
-	
 	}
 	@Override
 	public void movePoint(int x,int y) {
