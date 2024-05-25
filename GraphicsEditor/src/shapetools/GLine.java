@@ -30,9 +30,5 @@ private Graphics graphics;
 		shape.setLine(x1, y1, x2, y2);
 		graphics2D.draw(shape);
 	}
-	@Override
-	public void draw(Graphics graphics) {
-		// TODO Auto-generated method stub
-		graphics.drawLine(x1, y1, ox2, oy2);
-	}
+	
 }

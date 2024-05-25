@@ -5,14 +5,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -25,8 +17,11 @@ public class GDrawingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private enum EDrawingState {
-		eIdle, e2PState, eNPState,
-		eTransformation
+		eIdle, e2PState, eNPState, eTransformation
+	}
+
+	private enum EAnchor {
+		eMove, eResize, eRotate
 	}
 
 	private EDrawingState eDrawingState;
@@ -72,7 +67,7 @@ public class GDrawingPanel extends JPanel {
 	}
 
 	public void setShapes(Object object) {
-		this.shapes = (Vector<GShape>)object;
+		this.shapes = (Vector<GShape>) object;
 	}
 
 	// methods
@@ -112,8 +107,17 @@ public class GDrawingPanel extends JPanel {
 //		}
 //		return null;
 //	}
-	
-	
+
+	private GShape onShape(int x, int y) {
+		for (GShape shape : this.shapes) {
+			boolean isShape = shape.onShape(x, y);
+			if (isShape) {
+				return shape;
+			}
+		}
+		return null;
+	}
+
 	private class MouseEventHandler implements MouseListener, MouseMotionListener {
 
 		@Override
@@ -147,16 +151,23 @@ public class GDrawingPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (eDrawingState == EDrawingState.eIdle) {
-//				currentShape = onShape(e.getX(), e.getY());
-//				if(onShape(e.getX(),e.getY())==null)
+				currentShape = onShape(e.getX(), e.getY());
+				// 선택된 도형이 없을 때
+				if (onShape(e.getX(), e.getY()) == null) {
+					// 2개 점으로 그리는 것들
 					if (shapeTool.getEDrawingStyle() == EDrawingStyle.e2PStyle) {
-					startDrawing(e.getX(), e.getY());
-					eDrawingState = EDrawingState.e2PState;
-				}
-					else {
-						currentShape.startMove(e.getX(),e.getY());
-						eDrawingState = EDrawingState.eTransformation;
+						startDrawing(e.getX(), e.getY());
+						eDrawingState = EDrawingState.e2PState;
+					} else {
+						// ploygon drawing (click에서 진행중임)
+
 					}
+					// 도형 내 클릭했을 때 MOVE
+				} else {
+					currentShape.startMove(getGraphics(),e.getX(), e.getY());
+					eDrawingState = EDrawingState.eTransformation;
+				}
+
 			}
 		}
 
@@ -164,8 +175,8 @@ public class GDrawingPanel extends JPanel {
 		public void mouseDragged(MouseEvent e) {
 			if (eDrawingState == EDrawingState.e2PState) {
 				keepDrawing(e.getX(), e.getY());
-			}else if (eDrawingState == EDrawingState.eTransformation) {
-				currentShape.keepMove(e.getX(), e.getY());
+			} else if (eDrawingState == EDrawingState.eTransformation) {
+				currentShape.keepMove(getGraphics(), e.getX(), e.getY());
 			}
 
 		}
@@ -175,8 +186,8 @@ public class GDrawingPanel extends JPanel {
 			if (eDrawingState == EDrawingState.e2PState) {
 				stopDrawing(e.getX(), e.getY());
 				eDrawingState = EDrawingState.eIdle;
-			}else if (eDrawingState == EDrawingState.eTransformation) {
-				currentShape.stopMove(e.getX(), e.getY());
+			} else if (eDrawingState == EDrawingState.eTransformation) {
+				currentShape.stopMove(getGraphics(),e.getX(), e.getY());
 				eDrawingState = EDrawingState.eIdle;
 			}
 
