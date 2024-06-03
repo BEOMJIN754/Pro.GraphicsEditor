@@ -1,6 +1,7 @@
 package frames;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -10,6 +11,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import shapetools.GShape;
+import shapetools.GShape.EAnchors;
 import shapetools.GShape.EDrawingStyle;
 
 public class GDrawingPanel extends JPanel {
@@ -93,8 +95,9 @@ public class GDrawingPanel extends JPanel {
 	}
 
 	private void stopDrawing(int x, int y) {
-		currentShape.addPoint(x, y);
+		// currentShape.addPoint(x, y);
 		shapes.add(currentShape);
+		currentShape.setSelected(getGraphics());
 	}
 //
 //	private EAnchor onShape(int x,int y ) {
@@ -112,10 +115,21 @@ public class GDrawingPanel extends JPanel {
 		for (GShape shape : this.shapes) {
 			boolean isShape = shape.onShape(x, y);
 			if (isShape) {
+				System.out.println("sdf");
 				return shape;
 			}
 		}
 		return null;
+	}
+
+	private void changeCursor(int x, int y) {
+		GShape shape = this.onShape(x, y);
+		if (shape == null) {
+			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		} else {
+			this.setCursor(shape.getCursor());
+			System.out.println("123");
+		}
 	}
 
 	private class MouseEventHandler implements MouseListener, MouseMotionListener {
@@ -142,7 +156,9 @@ public class GDrawingPanel extends JPanel {
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			if (eDrawingState == EDrawingState.eNPState) {
+			if (eDrawingState == EDrawingState.eIdle) {
+				changeCursor(e.getX(), e.getY());
+			} else if (eDrawingState == EDrawingState.eNPState) {
 				keepDrawing(e.getX(), e.getY());
 				eDrawingState = EDrawingState.eNPState;
 			}
@@ -153,7 +169,7 @@ public class GDrawingPanel extends JPanel {
 			if (eDrawingState == EDrawingState.eIdle) {
 				currentShape = onShape(e.getX(), e.getY());
 				// 선택된 도형이 없을 때
-				if (onShape(e.getX(), e.getY()) == null) {
+				if (currentShape == null) {
 					// 2개 점으로 그리는 것들
 					if (shapeTool.getEDrawingStyle() == EDrawingStyle.e2PStyle) {
 						startDrawing(e.getX(), e.getY());
@@ -164,19 +180,31 @@ public class GDrawingPanel extends JPanel {
 					}
 					// 도형 내 클릭했을 때 MOVE
 				} else {
-					currentShape.startMove(getGraphics(),e.getX(), e.getY());
+					if (currentShape.getSelectedAnchor() == EAnchors.eMM) {
+						currentShape.startMove(getGraphics(), e.getX(), e.getY());
+					} else if (currentShape.getSelectedAnchor() == EAnchors.eRR) {
+
+					} else {
+						currentShape.startResize(getGraphics(), e.getX(), e.getY());
+					}
 					eDrawingState = EDrawingState.eTransformation;
 				}
 
 			}
 		}
-
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (eDrawingState == EDrawingState.e2PState) {
 				keepDrawing(e.getX(), e.getY());
 			} else if (eDrawingState == EDrawingState.eTransformation) {
-				currentShape.keepMove(getGraphics(), e.getX(), e.getY());
+				if (currentShape.getSelectedAnchor() == EAnchors.eMM) {
+					currentShape.keepMove(getGraphics(), e.getX(), e.getY());
+				} else if (currentShape.getSelectedAnchor() == EAnchors.eRR) {
+
+				} else {
+					currentShape.keepResize(getGraphics(), e.getX(), e.getY());
+				}
+				eDrawingState = EDrawingState.eIdle;
 			}
 
 		}
@@ -187,7 +215,13 @@ public class GDrawingPanel extends JPanel {
 				stopDrawing(e.getX(), e.getY());
 				eDrawingState = EDrawingState.eIdle;
 			} else if (eDrawingState == EDrawingState.eTransformation) {
-				currentShape.stopMove(getGraphics(),e.getX(), e.getY());
+				if (currentShape.getSelectedAnchor() == EAnchors.eMM) {
+					currentShape.stopMove(getGraphics(), e.getX(), e.getY());
+				} else if (currentShape.getSelectedAnchor() == EAnchors.eRR) {
+
+				} else {
+					currentShape.stopResize(getGraphics(), e.getX(), e.getY());
+				}
 				eDrawingState = EDrawingState.eIdle;
 			}
 
