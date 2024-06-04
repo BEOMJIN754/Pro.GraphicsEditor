@@ -115,7 +115,7 @@ public class GDrawingPanel extends JPanel {
 		for (GShape shape : this.shapes) {
 			boolean isShape = shape.onShape(x, y);
 			if (isShape) {
-				System.out.println("sdf");
+				System.out.println("onShape");
 				return shape;
 			}
 		}
@@ -128,7 +128,7 @@ public class GDrawingPanel extends JPanel {
 			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		} else {
 			this.setCursor(shape.getCursor());
-			System.out.println("123");
+			System.out.println("changeCursor");
 		}
 	}
 
@@ -192,6 +192,7 @@ public class GDrawingPanel extends JPanel {
 
 			}
 		}
+
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (eDrawingState == EDrawingState.e2PState) {

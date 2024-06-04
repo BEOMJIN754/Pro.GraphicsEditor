@@ -185,6 +185,7 @@ public abstract class GShape implements Serializable {
 		this.x2 = x;
 		this.y2 = y;
 
+		
 		Graphics2D graphics2D = (Graphics2D) graphics;
 		graphics2D.setXORMode(graphics2D.getBackground());
 		graphics2D.draw(this.shape);
@@ -192,6 +193,7 @@ public abstract class GShape implements Serializable {
 		int dx = x2 - ox2;
 		int dy = y2 - oy2;
 		AffineTransform affineTransform = new AffineTransform();
+		System.out.println("keepMove");
 		affineTransform.setToTranslation(dx, dy);
 		this.shape = affineTransform.createTransformedShape(this.shape);
 		graphics2D.draw(this.shape);
