@@ -52,7 +52,7 @@ public abstract class GShape implements Serializable {
 	protected Ellipse2D.Float[] anchors;
 
 	private double cx, cy;
-	private double sx,sy;
+	private double sx, sy;
 	private double dx, dy;
 
 	// setters and getters
@@ -88,6 +88,11 @@ public abstract class GShape implements Serializable {
 		this.y2 = 0;
 		this.ox2 = 0;
 		this.oy2 = 0;
+
+		this.sx = 1.0;
+		this.sy = 1.0;
+		this.dx = 0.0;
+		this.dy = 0.0;
 	}
 
 	public abstract GShape clone();
@@ -185,7 +190,6 @@ public abstract class GShape implements Serializable {
 		this.x2 = x;
 		this.y2 = y;
 
-		
 		Graphics2D graphics2D = (Graphics2D) graphics;
 		graphics2D.setXORMode(graphics2D.getBackground());
 		graphics2D.draw(this.shape);
@@ -205,8 +209,8 @@ public abstract class GShape implements Serializable {
 
 	public void startResize(Graphics graphics, int x, int y) {
 		// 좌표 저장
-		this.ox2 = x;
-		this.oy2 = y;
+		this.ox2 = x2;
+		this.oy2 = y2;
 		// 새로운 점 저장
 		this.x2 = x;
 		this.y2 = y;
@@ -214,13 +218,7 @@ public abstract class GShape implements Serializable {
 	};
 
 	private Point2D getresizeFactor() {
-		sx = 1.0;
-		sy = 1.0;
-		dx = 0.0;
-		dy = 0.0;
-		
-		double cx = 0;
-		double cy = 0;
+
 		double w = this.shape.getBounds().getWidth();
 		double h = this.shape.getBounds().getHeight();
 
@@ -228,14 +226,13 @@ public abstract class GShape implements Serializable {
 		case eEE:
 			sx = (w + x2 - ox2) / w;
 			cx = this.anchors[EAnchors.eWW.ordinal()].getCenterX();
-			dx = cx - cx*sx;
-
-			
+//			dx = cx - cx * sx;
+			dx = x2 - ox2;
 			break;
 		case eWW:
 			sx = (w + ox2 - x2) / w;
 			cx = this.anchors[EAnchors.eWW.ordinal()].getCenterX();
-			dx = cx*sx - cx;
+			dx = cx * sx - cx;
 			break;
 		case eSS:
 			sy = (h + y2 - oy2) / h;
@@ -250,26 +247,111 @@ public abstract class GShape implements Serializable {
 		return new Point2D.Double(sx, sy);
 	}
 
-
 	public void keepResize(Graphics graphics, int x, int y) {
-		// 기존 점을 저장
-		this.ox2 = this.x2;
-		this.oy2 = this.oy2;
-		// 새로운 점 저장
-		this.x2 = x;
-		this.y2 = y;
+
+//		Graphics2D graphics2D = (Graphics2D) graphics;
+//		graphics2D.setXORMode(graphics2D.getBackground());
+//		graphics2D.draw(this.shape);
+//
+//		Point2D resizeFactor = getresizeFactor();
+//
+//		AffineTransform affineTransform = new AffineTransform();
+//		System.out.println("SX: "+resizeFactor.getX());
+//		affineTransform.setToScale(resizeFactor.getX(), resizeFactor.getY());
+//		affineTransform.translate(dx,dy);
+//		this.shape = affineTransform.createTransformedShape(this.shape);
+//		graphics2D.draw(this.shape);
 
 		Graphics2D graphics2D = (Graphics2D) graphics;
 		graphics2D.setXORMode(graphics2D.getBackground());
 		graphics2D.draw(this.shape);
 
-		Point2D resizeFactor = getresizeFactor();
+		Rectangle bounds = this.shape.getBounds();
+		double w = bounds.getWidth();
+		double h = bounds.getHeight();
 
 		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.setToScale(resizeFactor.getX(), resizeFactor.getY());
-		affineTransform.translate(dx,dy);
+
+		switch (this.eSelectedAnchor) {
+		case eEE:
+			// Right edge anchor
+			sx = (x - bounds.getX()) / w;
+			cx = bounds.getX();
+			affineTransform.translate(cx, bounds.getY());
+			affineTransform.scale(sx, 1);
+			affineTransform.translate(-cx, -bounds.getY());
+			break;
+		case eWW:
+			// Left edge anchor
+			sx = (bounds.getX() + w - x) / w;
+			cx = bounds.getX() + w;
+			affineTransform.translate(cx, bounds.getY());
+			affineTransform.scale(sx, 1);
+			affineTransform.translate(-cx, -bounds.getY());
+			break;
+		case eSS:
+			// Bottom edge anchor
+			sy = (y - bounds.getY()) / h;
+			cy = bounds.getY();
+			affineTransform.translate(bounds.getX(), cy);
+			affineTransform.scale(1, sy);
+			affineTransform.translate(-bounds.getX(), -cy);
+			break;
+		case eNN:
+			// Top edge anchor
+			sy = (bounds.getY() + h - y) / h;
+			cy = bounds.getY() + h;
+			affineTransform.translate(bounds.getX(), cy);
+			affineTransform.scale(1, sy);
+			affineTransform.translate(-bounds.getX(), -cy);
+			break;
+		case eNE:
+			// Right top corner
+			sx = (x - bounds.getX()) / w;
+			sy = (bounds.getY() + h - y) / h;
+			cx = bounds.getX();
+			cy = bounds.getY() + h;
+			affineTransform.translate(cx, cy);
+			affineTransform.scale(sx, sy);
+			affineTransform.translate(-cx, -cy);
+			break;
+		case eNW:
+			// Left top corner
+			sx = (bounds.getX() + w - x) / w;
+			sy = (bounds.getY() + h - y) / h;
+			cx = bounds.getX() + w;
+			cy = bounds.getY() + h;
+			affineTransform.translate(cx, cy);
+			affineTransform.scale(sx, sy);
+			affineTransform.translate(-cx, -cy);
+			break;
+		case eSE:
+			// Right bottom corner
+			sx = (x - bounds.getX()) / w;
+			sy = (y - bounds.getY()) / h;
+			cx = bounds.getX();
+			cy = bounds.getY();
+			affineTransform.translate(cx, cy);
+			affineTransform.scale(sx, sy);
+			affineTransform.translate(-cx, -cy);
+			break;
+		case eSW:
+			// Left bottom corner
+			sx = (bounds.getX() + w - x) / w;
+			sy = (y - bounds.getY()) / h;
+			cx = bounds.getX() + w;
+			cy = bounds.getY();
+			affineTransform.translate(cx, cy);
+			affineTransform.scale(sx, sy);
+			affineTransform.translate(-cx, -cy);
+			break;
+		default:
+			return;
+		}
+
 		this.shape = affineTransform.createTransformedShape(this.shape);
 		graphics2D.draw(this.shape);
+
 	};
 
 	public void stopResize(Graphics graphics, int x, int y) {
