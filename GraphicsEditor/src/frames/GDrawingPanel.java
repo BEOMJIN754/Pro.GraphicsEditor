@@ -205,7 +205,6 @@ public class GDrawingPanel extends JPanel {
 				} else {
 					currentShape.keepResize(getGraphics(), e.getX(), e.getY());
 				}
-				eDrawingState = EDrawingState.eIdle;
 			}
 
 		}
