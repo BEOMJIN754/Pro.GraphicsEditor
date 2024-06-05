@@ -3,9 +3,11 @@ package frames;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -42,7 +44,7 @@ public class GDrawingPanel extends JPanel {
 
 	// constructors
 	public GDrawingPanel() {
-		this.setBackground(Color.gray);
+		this.setBackground(Color.white);
 		MouseEventHandler mouseEventHandler = new MouseEventHandler();
 		this.addMouseListener(mouseEventHandler);
 		this.addMouseMotionListener(mouseEventHandler);
@@ -80,14 +82,27 @@ public class GDrawingPanel extends JPanel {
 		}
 	}
 
+	BufferedImage bufferedImage;
+	Graphics2D graphics;
+	
 	private void startDrawing(int x, int y) {
-		currentShape = shapeTool.clone();
+		 bufferedImage = new BufferedImage( this.getWidth(), this.getHeight(),BufferedImage.TYPE_INT_RGB);
+		 graphics = (Graphics2D) bufferedImage.getGraphics();
+		 graphics.setColor(this.getForeground());
+		 graphics.setBackground(this.getBackground());
+		 graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
+		//리페인트 안에 넣어야 함
+		 currentShape = shapeTool.clone();
 		currentShape.setOrigin(x, y);
 	}
 
 	private void keepDrawing(int x, int y) {
 		currentShape.movePoint(x, y);
-		currentShape.drag(getGraphics());
+		
+		
+		graphics.clearRect(0, 0, this.getWidth(), this.getHeight());
+		currentShape.drag(graphics);
+		getGraphics().drawImage(bufferedImage, 0, 0, this.getWidth(), this.getHeight(),this);
 	}
 
 	private void continueDrawing(int x, int y) {
